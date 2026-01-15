@@ -11,16 +11,47 @@ export const Intro: React.FC<IntroProps> = ({ onComplete }) => {
     const [text, setText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
 
-    const welcomeMessage = "Welcome to AsciiVerse. I am your guide.";
+    const welcomeMessage = "Welcome to My Portfolio. I am your guide to walk you through my portfolio. ";
     const promptMessage = "Are you ready to explore?";
 
     useEffect(() => {
+        // Typewriter triggering logic
         if (step === 0) {
             typeText(welcomeMessage, () => setStep(1));
         } else if (step === 2) {
             typeText(promptMessage, () => setStep(3));
         }
-    }, [step]);
+
+        // Interaction logic
+        const handleInteraction = () => {
+            if (step === 1) setStep(2);
+            if (step === 3) onComplete();
+        };
+
+        const handleKeyDown = () => handleInteraction();
+
+        // Swipe logic
+        let touchStartY = 0;
+        const handleTouchStart = (e: TouchEvent) => {
+            touchStartY = e.touches[0].clientY;
+        };
+        const handleTouchEnd = (e: TouchEvent) => {
+            const touchEndY = e.changedTouches[0].clientY;
+            if (touchStartY - touchEndY > 50) { // Swipe Up detected
+                handleInteraction();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('touchstart', handleTouchStart);
+        window.addEventListener('touchend', handleTouchEnd);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('touchstart', handleTouchStart);
+            window.removeEventListener('touchend', handleTouchEnd);
+        };
+    }, [step, onComplete]);
 
     const typeText = (fullText: string, callback: () => void) => {
         setIsTyping(true);
@@ -38,25 +69,25 @@ export const Intro: React.FC<IntroProps> = ({ onComplete }) => {
     };
 
     return (
-        <div className="scene intro" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem' }}>
+        <div className="scene intro" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2rem', height: '100%', justifyContent: 'center' }}>
 
             {/* Stage Area */}
-            <div style={{ display: 'flex', gap: '4rem', alignItems: 'flex-end', minHeight: '150px' }}>
+            <div style={{ display: 'flex', gap: '15rem', alignItems: 'flex-end', minHeight: '150px' }}>
 
-                {/* NPC */}
+                {/* NPC (Now Visitor) */}
                 <div style={{ textAlign: 'center' }}>
                     <AsciiCharacter
                         frames={NPC}
-                        state={isTyping ? 'talking' : 'idle'}
+                        state={'idle'}
                     />
-                    <div style={{ marginTop: '1rem', color: '#aaa', fontSize: '0.8rem' }}>GUIDE</div>
+                    <div style={{ marginTop: '1rem', color: '#aaa', fontSize: '0.8rem' }}>VISITOR</div>
                 </div>
 
                 {/* DIALOGUE BUBBLE (CSS Border) */}
                 <div style={{
                     border: '1px solid #fff',
                     padding: '1rem',
-                    width: '300px',
+                    width: '500px',
                     minHeight: '80px',
                     display: 'flex',
                     alignItems: 'center',
@@ -64,26 +95,24 @@ export const Intro: React.FC<IntroProps> = ({ onComplete }) => {
                     textAlign: 'center'
                 }}>
                     {text}
-                    {step === 1 && (
-                        <button onClick={() => setStep(2)} style={{ marginLeft: '10px' }}>▼</button>
-                    )}
                 </div>
 
-                {/* PLAYER (Hidden initially or fades in? Prompt says "Left: NPC, Right: You". Let's show You) */}
-                <div style={{ textAlign: 'center', opacity: step >= 2 ? 1 : 0.5, transition: 'opacity 1s' }}>
+                {/* PLAYER (Now ME/Guide) */}
+                <div style={{ textAlign: 'center' }}>
                     <AsciiCharacter
                         frames={YOU}
-                        state={'idle'}
+                        state={isTyping ? 'talking' : 'idle'}
                     />
-                    <div style={{ marginTop: '1rem', color: '#aaa', fontSize: '0.8rem' }}>YOU</div>
+                    <div style={{ marginTop: '1rem', color: '#aaa', fontSize: '0.8rem' }}>ME</div>
                 </div>
 
             </div>
 
-            {step === 3 && (
-                <button onClick={onComplete} style={{ marginTop: '2rem', fontSize: '1.2rem' }}>
-                    [ ENTER SYSTEM ]
-                </button>
+            {/* Footer Interaction Hint */}
+            {(step === 1 || step === 3) && (
+                <div className="blink" style={{ marginTop: '4rem', color: '#888', fontSize: '0.9rem' }}>
+                    [ PRESS ANY KEY OR SWIPE UP TO CONTINUE ]
+                </div>
             )}
 
         </div>

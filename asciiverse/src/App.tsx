@@ -27,9 +27,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <header style={{ position: 'absolute', top: 20, left: 20, opacity: 0.5 }}>
-        AsciiVerse v0.1
-      </header>
+
 
       <main>
         {scene === 'intro' && (
@@ -38,13 +36,17 @@ function App() {
 
         {scene === 'map' && (
           <div className="map-container fade-in-up">
-            <h2>SYSTEM MAP</h2>
+
             <Map onSelectStation={handleStationSelect} />
           </div>
         )}
 
         {scene === 'station' && currentStation && (
-          <Station name={currentStation} onBack={handleBackToMap} />
+          <Station
+            name={currentStation}
+            onBack={handleBackToMap}
+            onNavigate={handleStationSelect}
+          />
         )}
       </main>
 
