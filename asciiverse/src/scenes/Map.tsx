@@ -126,7 +126,7 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
   \\_   ____/
    \\ /`;
 
-    const renderMap = () => {
+    const renderMapElements = () => {
         // 1. Init Grid
         const grid: string[][] = Array(HEIGHT).fill(null).map(() => Array(WIDTH).fill(' '));
 
@@ -154,7 +154,7 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
             }
         }
 
-        // 3. Draw Stations
+        // 3. Draw Stations (Inject text into grid)
         STATIONS.forEach(s => {
             const text = s.label;
             for (let i = 0; i < text.length; i++) {
@@ -178,10 +178,66 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
             grid[arrow.y][arrow.x] = dirChar;
         }
 
-        return grid.map(r => r.join('')).join('\n');
+        // 5. Convert Grid to React Elements with Clickable Buttons
+        return grid.map((rowChars, rowIndex) => {
+            const rowString = rowChars.join('');
+
+            // Find stations on this row
+            const rowStations = STATIONS.filter(s => s.y === rowIndex).sort((a, b) => a.x - b.x);
+
+            if (rowStations.length === 0) {
+                // Return simple text row
+                return <div key={rowIndex} style={{ height: '12px' }}>{rowString}</div>;
+            }
+
+            // Slice row into interactive segments
+            const segments = [];
+            let currentX = 0;
+
+            rowStations.forEach(station => {
+                const start = station.x;
+                const end = station.x + station.label.length;
+
+                // Text before starts
+                if (start > currentX) {
+                    segments.push(
+                        <span key={`${rowIndex}-pre-${station.id}`}>
+                            {rowString.slice(currentX, start)}
+                        </span>
+                    );
+                }
+
+                // Station Button (The Label itself becomes the button)
+                segments.push(
+                    <button
+                        key={station.id}
+                        onClick={() => onSelectStation(station.id)}
+                        className="station-text-btn"
+                        aria-label={`Go to ${station.label}`}
+                    >
+                        {rowString.slice(start, end)}
+                    </button>
+                );
+
+                currentX = end;
+            });
+
+            // Remaining text after last station
+            if (currentX < rowString.length) {
+                segments.push(
+                    <span key={`${rowIndex}-post`}>
+                        {rowString.slice(currentX)}
+                    </span>
+                );
+            }
+
+            return <div key={rowIndex} style={{ height: '12px', display: 'flex' }}>{segments}</div>;
+        });
     };
 
     // Keyboard Navigation
+    // Keyboard Navigation removed to keep map pure clickable
+    /*
     useEffect(() => {
         const handleKeyPress = () => {
             onSelectStation('SUMMARY');
@@ -189,6 +245,7 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
     }, [onSelectStation]);
+    */
 
     return (
         <div className="scene map" style={{
@@ -234,27 +291,8 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
                         margin: '0',
                         textAlign: 'left'
                     }}>
-                        {renderMap()}
+                        {renderMapElements()}
                     </pre>
-
-                    {/* Hitboxes Overlay aligned to Map */}
-                    <div style={{ position: 'absolute', top: 0, left: 0, width: `${WIDTH}ch`, height: `${HEIGHT}em` }}>
-                        {STATIONS.map(s => (
-                            <button
-                                key={s.id}
-                                onClick={() => onSelectStation(s.id)}
-                                style={{
-                                    position: 'absolute',
-                                    left: `${s.x}ch`,
-                                    top: `${s.y}em`,
-                                    width: `${s.label.length}ch`,
-                                    height: '1em',
-                                    opacity: 0,
-                                    cursor: 'pointer'
-                                }}
-                            />
-                        ))}
-                    </div>
                 </div>
 
                 {/* YOU - Right Side */}
@@ -281,7 +319,7 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
 
             {/* Footer Hint */}
             <div className="blink" style={{ marginTop: '2rem', color: '#666', fontSize: '0.9rem' }}>
-                [ PRESS ANY KEY TO ENTER SYSTEM ]
+                [ CLICK OR TAP A DESTINATION ]
             </div>
 
         </div>

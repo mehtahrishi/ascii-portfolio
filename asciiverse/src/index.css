@@ -96,3 +96,24 @@ button:hover {
     opacity: 0;
   }
 }
+
+/* Inline Station Buttons for Map */
+.station-text-btn {
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+  color: inherit;
+  font: inherit !important;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.1s, text-shadow 0.1s;
+}
+
+.station-text-btn:hover,
+.station-text-btn:focus {
+  color: #fff;
+  text-shadow: 0 0 5px #fff;
+  text-decoration: underline;
+  outline: none;
+}

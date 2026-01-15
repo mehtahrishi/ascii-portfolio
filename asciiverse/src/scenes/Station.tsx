@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { SUMMARY } from '../data/summary';
+import { SKILLS } from '../data/skillsList';
 import { AsciiCharacter } from '../components/AsciiCharacter';
 import { NPC, YOU } from '../ascii/characters';
 
@@ -109,6 +110,7 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
     const [typedName, setTypedName] = useState('');
     const [typedRoles, setTypedRoles] = useState('');
     const [typedDesc, setTypedDesc] = useState('');
+    const [showSkills, setShowSkills] = useState(false);
 
     // Start typing content after dialogue roughly finishes or alongside it
     useEffect(() => {
@@ -142,6 +144,11 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
                 }, 10);
             }, 3000);
         }
+        if (name === 'SKILLS') {
+            setShowSkills(false);
+            const t = setTimeout(() => setShowSkills(true), 100);
+            return () => clearTimeout(t);
+        }
     }, [name]);
 
     // Helper to render content based on station name
@@ -163,6 +170,50 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
             );
         }
 
+        if (name === 'SKILLS') {
+            return (
+                <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', textAlign: 'left' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '0.75rem' }}>
+                        {SKILLS.map((category) => (
+                            <div key={category.category} style={{
+                                marginBottom: '0.5rem',
+                                gridColumn: category.category === 'No Code' ? '1 / -1' : 'auto'
+                            }}>
+                                <h3 style={{ color: '#fff', borderBottom: '1px solid #444', paddingBottom: '0.25rem', marginBottom: '0.5rem', fontSize: '1rem' }}>
+                                    {category.category}
+                                </h3>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                                    {category.items.map((skill) => (
+                                        <span key={skill.name} style={{
+                                            background: '#222',
+                                            padding: '0.2rem 0.4rem',
+                                            borderRadius: '3px',
+                                            color: '#aaa',
+                                            fontSize: '0.8rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '0.4rem'
+                                        }}>
+                                            <span style={{
+                                                color: '#0f0',
+                                                display: 'flex',
+                                                opacity: showSkills ? 1 : 0,
+                                                transform: showSkills ? 'scale(1)' : 'scale(0.5)',
+                                                transition: 'all 0.3s ease-out'
+                                            }}>
+                                                {skill.icon}
+                                            </span>
+                                            {skill.name}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
         return (
             <p style={{ margin: '2rem 0' }}>
                 [ Content for {name} loading... ]
@@ -179,8 +230,8 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '6rem', // Increased gap to push characters further out
-            padding: '2rem'
+            gap: '6rem',
+            padding: '2rem 2rem 15vh 2rem' // Added large bottom padding to shift everything up
         }}>
             {/* NPC - Left Side - Avoiding Overlay */}
             <div style={{ flexShrink: 0, position: 'relative', width: '180px', zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
