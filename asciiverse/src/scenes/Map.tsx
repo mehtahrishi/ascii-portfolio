@@ -15,10 +15,10 @@ const STATIONS: Station[] = [
     { id: 'SUMMARY', label: '[ SUMMARY ]', x: 4, y: 4 },
     { id: 'EDUCATION', label: '[ EDUCATION ]', x: 45, y: 12 },
     { id: 'SKILLS', label: '[ SKILLS ]', x: 75, y: 4 },
-    { id: 'EXP', label: '[ EXP ]', x: 85, y: 20 },
+    { id: 'EXPERIENCE', label: '[ EXPERIENCE ]', x: 80, y: 20 },
     { id: 'PROJECTS', label: '[ PROJECTS ]', x: 55, y: 30 },
-    { id: 'VOLUNTEER', label: '[ VOLUNTEER ]', x: 15, y: 35 },
-    { id: 'CONTACT', label: '[ CONTACT ]', x: 6, y: 20 },
+    { id: 'VOLUNTEER', label: '[ VOLUNTEER ]', x: 6, y: 20 },
+    { id: 'CONTACT', label: '[ CONTACT ]', x: 15, y: 35 },
 ];
 
 /**
@@ -35,14 +35,18 @@ const PATH_POINTS: Point[] = [
     ...line(65, 12, 65, 4),
     ...line(65, 4, 75, 4),
 
-    // 3. Skills -> Exp (Down-Right winding)
-    ...line(85, 4, 95, 4), // Far right
-    ...line(95, 4, 95, 20), // Down
-    ...line(95, 20, 92, 20), // Left into Exp
+    // 3. Skills -> Experience (Winding to enter from left)
+    ...line(85, 4, 95, 4),
+    ...line(95, 4, 95, 18),
+    ...line(95, 18, 72, 18),
+    ...line(72, 18, 72, 20),
+    ...line(72, 20, 79, 20), // Connection into left side
 
-    // 4. Exp -> Projects (Down-Left)
-    ...line(85, 20, 80, 20),
-    ...line(80, 20, 80, 30),
+    // 4. Experience -> Projects (Down-Left)
+    ...line(94, 20, 96, 20),
+    ...line(96, 20, 96, 26),
+    ...line(96, 26, 80, 26),
+    ...line(80, 26, 80, 30),
     ...line(80, 30, 67, 30),
 
     // 5. Projects -> Contact (Left-Up-Left complex)
