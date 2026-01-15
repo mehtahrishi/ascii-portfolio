@@ -103,7 +103,80 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
   /                                        \\
  | Yeah, now I am curious about your skills.|
   \\_________________   ____________________/
-                    \\ /`
+                    \\ /`,
+        VISITOR_SKILLS_1: `
+   __________________________________________
+  /                                          \\
+ | Woah. Docker, K8s, And Graph DBs?          |
+ | You running a startup or just showing off? |
+  \\_____________________   __________________/
+                        | |
+                        \\ /`,
+        ME_SKILLS_1: `
+   ______________________________________________
+  /                                              \\
+ | Haha. I don't just build UIs; I architect      |
+ | ecosystems.                                    |
+  \\________________________   __________________/
+                           | |
+                           \\ /`,
+        ME_SKILLS_1_B: `
+   ______________________________________
+  /                                      \\
+ | If it doesn't scale, it doesn't exist. |
+  \\__________________   _________________/
+                     | |
+                     \\ /`,
+        VISITOR_SKILLS_2: `
+   ___________________________________________
+  /                                           \\
+ | Fair. But "No Code" & AI bots? Copilot?     |
+  \\_______________________   _________________/
+                          | |
+                          \\ /`,
+        VISITOR_SKILLS_2_B: `
+   ___________________________________________
+  /                                           \\
+ | Isn't that... cheating for a "real" dev?    |
+  \\_______________________   _________________/
+                          | |
+                          \\ /`,
+        ME_SKILLS_2: `
+   ________________________________________________
+  /                                                \\
+ | It's acceleration. Gemini handles boilerplate.   |
+  \\__________________________   __________________/
+                             | |
+                             \\ /`,
+        ME_SKILLS_2_B: `
+   ____________________________________________________
+  /                                                    \\
+ | n8n does the piping. Antigravity boosts the speed.   |
+  \\__________________________     ____________________/
+                             |   |
+                             \\   /`,
+        ME_SKILLS_2_C: `
+   _________________________________
+  /                                 \\
+ | I focus on the complex logic.     |
+  \\_______________   ______________/
+                  | |
+                  \\ /`,
+        VISITOR_SKILLS_3: `
+   _________________________________________
+  /                                         \\
+ | So you're a full-stack automated army?    |
+  \\_____________________   ________________/
+                        | |
+                        \\ /`,
+        ME_SKILLS_3: `
+   _________________________________________
+  /                                         \\
+ | Exactly. We move fast here.               |
+ | Want to see what I've actually built?     |
+  \\_____________________   _________________/
+                        | |
+                        \\ /`
     };
 
     // Typewriter State
@@ -147,7 +220,26 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
         if (name === 'SKILLS') {
             setShowSkills(false);
             const t = setTimeout(() => setShowSkills(true), 100);
-            return () => clearTimeout(t);
+
+            // SKILLS Dialogue Sequence (11-21)
+            const s1 = setTimeout(() => setDialogueStep(11), 1000); // V: Woah...
+            const s2 = setTimeout(() => setDialogueStep(12), 6000); // M: Ecosystems...
+            const s2b = setTimeout(() => setDialogueStep(13), 10000); // M: Scale...
+            const s3 = setTimeout(() => setDialogueStep(14), 13000); // V: NoCode/AI?
+            const s3b = setTimeout(() => setDialogueStep(15), 17000); // V: Cheating? (NEW)
+            const s4 = setTimeout(() => setDialogueStep(16), 21000); // M: Gemini... (NEW)
+            const s4b = setTimeout(() => setDialogueStep(17), 25000); // M: n8n/Antigrav... (NEW)
+            const s4c = setTimeout(() => setDialogueStep(18), 29000); // M: Logic... (NEW)
+            const s5 = setTimeout(() => setDialogueStep(19), 32000); // V: Army? (SHIFTED)
+            const s6 = setTimeout(() => setDialogueStep(20), 36000); // M: Projects? (SHIFTED)
+            const s7 = setTimeout(() => setDialogueStep(21), 40000); // End (SHIFTED)
+
+            return () => {
+                clearTimeout(t);
+                clearTimeout(s1); clearTimeout(s2); clearTimeout(s2b); clearTimeout(s3);
+                clearTimeout(s3b); clearTimeout(s4); clearTimeout(s4b); clearTimeout(s4c);
+                clearTimeout(s5); clearTimeout(s6); clearTimeout(s7);
+            };
         }
     }, [name]);
 
@@ -173,42 +265,58 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
         if (name === 'SKILLS') {
             return (
                 <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', textAlign: 'left' }}>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '0.75rem' }}>
-                        {SKILLS.map((category) => (
-                            <div key={category.category} style={{
-                                marginBottom: '0.5rem',
-                                gridColumn: category.category === 'No Code' ? '1 / -1' : 'auto'
-                            }}>
-                                <h3 style={{ color: '#fff', borderBottom: '1px solid #444', paddingBottom: '0.25rem', marginBottom: '0.5rem', fontSize: '1rem' }}>
-                                    {category.category}
-                                </h3>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
-                                    {category.items.map((skill) => (
-                                        <span key={skill.name} style={{
-                                            background: '#222',
-                                            padding: '0.2rem 0.4rem',
-                                            borderRadius: '3px',
-                                            color: '#aaa',
-                                            fontSize: '0.8rem',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '0.4rem'
-                                        }}>
-                                            <span style={{
-                                                color: '#0f0',
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '0.75rem' }}>
+                        {SKILLS.map((category) => {
+                            const isNoCode = category.category === 'No Code';
+                            return (
+                                <div key={category.category} style={{
+                                    marginBottom: '0.5rem',
+                                    gridColumn: isNoCode ? '1 / -1' : 'auto',
+                                    display: isNoCode ? 'flex' : 'block',
+                                    alignItems: isNoCode ? 'center' : 'initial',
+                                    gap: isNoCode ? '1rem' : '0'
+                                }}>
+                                    <h3 style={{
+                                        color: '#fff',
+                                        borderBottom: isNoCode ? 'none' : '1px solid #444',
+                                        paddingBottom: isNoCode ? '0' : '0.25rem',
+                                        marginBottom: isNoCode ? '0' : '0.5rem',
+                                        fontSize: '1rem',
+                                        whiteSpace: 'nowrap'
+                                    }}>
+                                        {category.category}
+                                    </h3>
+
+                                    {isNoCode && <span style={{ color: '#666' }}>-</span>}
+
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+                                        {category.items.map((skill) => (
+                                            <span key={skill.name} style={{
+                                                background: '#222',
+                                                padding: '0.2rem 0.4rem',
+                                                borderRadius: '3px',
+                                                color: '#aaa',
+                                                fontSize: '0.8rem',
                                                 display: 'flex',
-                                                opacity: showSkills ? 1 : 0,
-                                                transform: showSkills ? 'scale(1)' : 'scale(0.5)',
-                                                transition: 'all 0.3s ease-out'
+                                                alignItems: 'center',
+                                                gap: '0.4rem'
                                             }}>
-                                                {skill.icon}
+                                                <span style={{
+                                                    color: '#0f0',
+                                                    display: 'flex',
+                                                    opacity: showSkills ? 1 : 0,
+                                                    transform: showSkills ? 'scale(1)' : 'scale(0.5)',
+                                                    transition: 'all 0.3s ease-out'
+                                                }}>
+                                                    {skill.icon}
+                                                </span>
+                                                {skill.name}
                                             </span>
-                                            {skill.name}
-                                        </span>
-                                    ))}
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            );
+                        })}
                     </div>
                 </div>
             );
@@ -235,7 +343,8 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
         }}>
             {/* NPC - Left Side - Avoiding Overlay */}
             <div style={{ flexShrink: 0, position: 'relative', width: '180px', zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {(dialogueStep === 1 || dialogueStep === 5 || dialogueStep === 8) && (
+                {/* Shows bubble for SUMMARY steps 1,5,8 AND SKILLS steps 11,14,15,19 */}
+                {(dialogueStep === 1 || dialogueStep === 5 || dialogueStep === 8 || dialogueStep === 11 || dialogueStep === 14 || dialogueStep === 15 || dialogueStep === 19) && (
                     <pre style={{
                         position: 'absolute',
                         bottom: '100%',
@@ -248,13 +357,22 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
                         pointerEvents: 'none'
                     }}>
                         {dialogueStep === 1 ? BUBBLES.VISITOR_1 :
-                            dialogueStep === 5 ? BUBBLES.VISITOR_2 : BUBBLES.VISITOR_3}
+                            dialogueStep === 5 ? BUBBLES.VISITOR_2 :
+                                dialogueStep === 8 ? BUBBLES.VISITOR_3 :
+                                    dialogueStep === 11 ? BUBBLES.VISITOR_SKILLS_1 :
+                                        dialogueStep === 14 ? BUBBLES.VISITOR_SKILLS_2 :
+                                            dialogueStep === 15 ? BUBBLES.VISITOR_SKILLS_2_B :
+                                                BUBBLES.VISITOR_SKILLS_3}
                     </pre>
                 )}
                 <div style={{ position: 'relative' }}>
                     <AsciiCharacter
                         frames={NPC}
-                        state={(dialogueStep === 1 || dialogueStep === 5 || dialogueStep === 8) ? "talking" : (dialogueStep === 5 || dialogueStep === 8 ? "surprised" : (dialogueStep >= 6 ? "happy" : "idle"))}
+                        state={
+                            (dialogueStep === 1 || dialogueStep === 5 || dialogueStep === 8 || dialogueStep === 11 || dialogueStep === 14 || dialogueStep === 15 || dialogueStep === 19) ? "talking" :
+                                (dialogueStep === 5 || dialogueStep === 8 || dialogueStep === 11 || dialogueStep === 15) ? "surprised" :
+                                    (dialogueStep >= 6 || dialogueStep >= 19) ? "happy" : "idle"
+                        }
                     />
                 </div>
                 <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666', fontSize: '0.8rem' }}>VISITOR</div>
@@ -265,9 +383,15 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
                 <h1 style={{ marginBottom: '2rem' }}>{`{ ${name} }`}</h1>
                 {renderContent()}
 
-                {dialogueStep >= 9 && (
+                {dialogueStep >= 9 && name === 'SUMMARY' && (
                     <div className="blink" style={{ marginTop: '2rem', color: '#666', fontSize: '0.9rem' }}>
                         [ PRESS ANY KEY TO GO TO SKILLS ]
+                    </div>
+                )}
+
+                {dialogueStep >= 21 && name === 'SKILLS' && (
+                    <div className="blink" style={{ marginTop: '2rem', color: '#666', fontSize: '0.9rem' }}>
+                        [ PRESS ANY KEY TO CONTINUE ]
                     </div>
                 )}
 
@@ -278,7 +402,8 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
 
             {/* YOU - Right Side */}
             <div style={{ flexShrink: 0, position: 'relative', width: '180px', zIndex: 20, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {(dialogueStep === 2 || dialogueStep === 3 || dialogueStep === 4 || dialogueStep === 6 || dialogueStep === 7) && (
+                {/* ME Steps: SUMMARY 2,3,4,6,7 | SKILLS 12,13,16,17,18,20 */}
+                {(dialogueStep === 2 || dialogueStep === 3 || dialogueStep === 4 || dialogueStep === 6 || dialogueStep === 7 || dialogueStep === 12 || dialogueStep === 13 || dialogueStep === 16 || dialogueStep === 17 || dialogueStep === 18 || dialogueStep === 20) && (
                     <pre style={{
                         position: 'absolute',
                         bottom: '100%',
@@ -293,13 +418,23 @@ export const Station: React.FC<StationProps> = ({ name, onBack, onNavigate }) =>
                         {dialogueStep === 2 ? BUBBLES.ME_1 :
                             dialogueStep === 3 ? BUBBLES.ME_2 :
                                 dialogueStep === 4 ? BUBBLES.ME_3 :
-                                    dialogueStep === 6 ? BUBBLES.ME_4 : BUBBLES.ME_5}
+                                    dialogueStep === 6 ? BUBBLES.ME_4 :
+                                        dialogueStep === 7 ? BUBBLES.ME_5 :
+                                            dialogueStep === 12 ? BUBBLES.ME_SKILLS_1 :
+                                                dialogueStep === 13 ? BUBBLES.ME_SKILLS_1_B :
+                                                    dialogueStep === 16 ? BUBBLES.ME_SKILLS_2 :
+                                                        dialogueStep === 17 ? BUBBLES.ME_SKILLS_2_B :
+                                                            dialogueStep === 18 ? BUBBLES.ME_SKILLS_2_C :
+                                                                BUBBLES.ME_SKILLS_3}
                     </pre>
                 )}
                 <div style={{ position: 'relative' }}>
                     <AsciiCharacter
                         frames={YOU}
-                        state={(dialogueStep === 2 || dialogueStep === 3 || dialogueStep === 4 || dialogueStep === 6 || dialogueStep === 7) ? "talking" : (dialogueStep >= 6 ? "happy" : "idle")}
+                        state={
+                            (dialogueStep === 2 || dialogueStep === 3 || dialogueStep === 4 || dialogueStep === 6 || dialogueStep === 7 || dialogueStep === 12 || dialogueStep === 13 || dialogueStep === 16 || dialogueStep === 17 || dialogueStep === 18 || dialogueStep === 20) ? "talking" :
+                                (dialogueStep >= 6 || dialogueStep >= 20) ? "happy" : "idle"
+                        }
                     />
                 </div>
                 <div style={{ textAlign: 'center', marginTop: '1rem', color: '#666', fontSize: '0.8rem' }}>ME</div>
