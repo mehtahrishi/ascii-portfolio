@@ -105,30 +105,30 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
    _________________________
   /                         \\
  | Hey u see the map right?  |
-  \\______________________   _/
-                        \\ /`;
+  \\___________   ___________/
+              \\ /`;
 
     const BUBBLE_VISITOR_1 = `
-   __________________________________
-  /                                  \\
- | Yes i can well its a bit of maze   |
-  \\_   _____________________________/
-   \\ /`;
+   _________________________________
+  /                                 \\
+ | Yes i can well its a bit of maze  |
+  \\_______________   _______________/
+                  \\ /`;
 
     const BUBBLE_ME_2 = `
    _______________________________________
   /                                       \\
  | Well i am here to help you mate.        |
  | I'll help you in each destination hehe  |
-  \\____________________________________   _/
-                                       \\ /`;
+  \\_______   _____________________________/
+          \\ /`;
 
     const BUBBLE_VISITOR_2 = `
-   ________
-  /        \\
- |   Cool   |
-  \\_   ____/
-   \\ /`;
+   __________
+  /          \\
+ |   Cool!    |
+  \\____   ___/
+       \\ /`;
 
     const renderMapElements = () => {
         // 1. Init Grid
@@ -271,7 +271,7 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
                         <pre style={{
                             position: 'absolute',
                             bottom: '100%',
-                            left: '-20px',
+                            left: dialogueStep === 4 ? '10px' : '-140px',
                             color: '#fff',
                             marginBottom: '5px',
                             textShadow: '0 0 5px #000'
@@ -305,7 +305,7 @@ export const Map: React.FC<MapProps> = ({ onSelectStation }) => {
                         <pre style={{
                             position: 'absolute',
                             bottom: '100%',
-                            right: '-20px',
+                            right: '-60px',
                             color: '#fff',
                             marginBottom: '5px',
                             textShadow: '0 0 5px #000'
